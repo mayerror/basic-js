@@ -28,16 +28,14 @@ function transform(arr) {
       statusPrevDeleted = 0;
     } else if (element === '--discard-next') {
       if (index !==(arr.length-1)) {
-        statusPrevDeleted++;
+        statusPrevDeleted = 1;
       }
     } else {
       if (statusPrevDeleted === 0 || statusPrevDeleted === 2) {
         resultArr.push(element);
         statusPrevDeleted = 0;
-      } else statusPrevDeleted++;
+      } else statusPrevDeleted = 2;
     }
   });
   return resultArr;
 };
-
-// console.log(transform(['sdasd', 1, 3, '--double-prev']));
