@@ -28,10 +28,10 @@ const arr = [ ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
 
 class VigenereCipheringMachine {
   constructor(arg) {
-    if (arg == undefined && arg) {
-      this.reverse = true;
+    if (arg == undefined || arg) {
+      this.direct = true;
     } else {
-      this.reverse = false;
+      this.direct = false;
     }
     
   }
@@ -39,8 +39,15 @@ class VigenereCipheringMachine {
     if (string == undefined || keyword == undefined) {
       throw 'Error';
     } else {
-      let arrString = string.toUpperCase().split('');
-      arrString.map((element, index) => {
+      let arrString = string.toUpperCase().split(''),
+          indexKey = 0;
+      
+      keyword = keyword.toUpperCase();
+      while (keyword.length<arrString.length) {
+        keyword += keyword;
+      }
+      
+      arrString = arrString.map((element, index) => {
         if (element.match(/[A-Z]/)) {
           let indexX = 0,
               indexY = 0;
@@ -50,13 +57,20 @@ class VigenereCipheringMachine {
             }
           }
           for (let i = 0; i < arr.length; i++) {
-            if (element === arr[i][0]) {
+            if (keyword[indexKey] === arr[i][0]) {
               indexY = i;
             }
           }
+          indexKey++;
+          return arr[indexX][indexY];
         } else return element;
       });
-      return arrString;
+      console.log(this.direct);
+      if (this.direct) {
+        return arrString.join('');
+      } else {
+        return arrString.reverse().join('');
+      }
     }
     
   }    
@@ -64,11 +78,43 @@ class VigenereCipheringMachine {
   decrypt(string, keyword) {
     if (string == undefined || keyword == undefined) {
       throw 'Error';
+    } else {
+      let arrString = string.toUpperCase().split(''),
+          indexKey = 0;
+      
+      keyword = keyword.toUpperCase();
+      while (keyword.length<arrString.length) {
+        keyword += keyword;
+      }
+
+      arrString = arrString.map((element, index) => {
+        if (element.match(/[A-Z]/)) {
+          let indexX = 0,
+              indexY = 0;
+          for (let i = 0; i < arr.length; i++) {
+            if (keyword[indexKey] === arr[i][0]) {
+              indexY = i;
+            }
+          }
+          for (let i = 0; i < arr[0].length; i++) {
+            if (element === arr[indexY][i]) {
+              indexX = i;
+            }
+          }
+          indexKey++;
+          return arr[0][indexX];
+        } else return element;
+      });
+      
+      if (this.direct) {
+        return arrString.join('');
+      } else {
+        return arrString.reverse().join('');
+      }
     }
   }
 }
 
-let obj = new VigenereCipheringMachine();
-console.log(obj.encrypt('attack at dawn!', 'alphonse'));
+
 
 module.exports = VigenereCipheringMachine;
